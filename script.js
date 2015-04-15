@@ -8,19 +8,26 @@ window.onload = function() {
 	canvas = document.getElementById('canvas');
 	c = canvas.getContext('2d');
 
+	paddle = new Paddle();
+
 	document.addEventListener('keydown', keydown, false);
 	document.addEventListener('keyup', keyup, false);
 
-	c.strokeRect(0, 0, 800, 600); // frame
-
-	c.fillStyle = 'red';
-	c.fillRect(500, 500, 40, 10);
-
-	window.setInterval(loop, 3000);
+	window.setInterval(loop, 30);
 }
 
 function loop() {
-	console.log('loop' + direction);
+	if (direction == LEFT) paddle.move(-9);
+	else if(direction == RIGHT) paddle.move(9);
+
+	draw();
+}
+
+function draw() {
+	c.clearRect(0, 0, canvas.width, canvas.height);
+	c.strokeRect(0, 0, 800, 600); // frame
+
+	paddle.draw(c);
 }
 
 function keydown(e) {
@@ -29,5 +36,5 @@ function keydown(e) {
 }
 
 function keyup(e) {
-	if (e.keycode == LEFT || e.keyCode == RIGHT) direction = 0;
+	if (e.keyCode == LEFT || e.keyCode == RIGHT) direction = 0;
 }
