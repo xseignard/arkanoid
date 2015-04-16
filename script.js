@@ -19,11 +19,13 @@ window.onload = function() {
 }
 
 function init() {
-	paddle = new Paddle();
-	ball = new Ball(paddle.x, paddle.y);
+	paddle = new Paddle(WIDTH/2 - Paddle.width/2, 550);
+	ball = new Ball(paddle.x + Paddle.width/2, paddle.y - Ball.radius);
 	bricks = []
-	for (x = 50; x < WIDTH - 50; x += 50) {
-		bricks.push(new Brick(x, 50));
+	for (x = 55; x < WIDTH - 50; x += 50) {
+		for (y = 50; y < 100; y += 24) {
+			bricks.push(new Brick(x, y));
+		}
 	}
 }
 
