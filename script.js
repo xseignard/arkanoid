@@ -1,40 +1,70 @@
 var LEFT = 37, RIGHT = 39;
+var WIDTH = 600; HEIGHT = 600;
 
 var canvas, c;
 var paddle, ball, bricks;
-var direction = 0;
+
+var keyL = false, keyR = false;
 
 window.onload = function() {
 	canvas = document.getElementById('canvas');
 	c = canvas.getContext('2d');
 
-	paddle = new Paddle();
-
 	document.addEventListener('keydown', keydown, false);
 	document.addEventListener('keyup', keyup, false);
+
+	init();
 
 	window.setInterval(loop, 30);
 }
 
-function loop() {
-	if (direction == LEFT) paddle.move(-9);
-	else if(direction == RIGHT) paddle.move(9);
+function init() {
+	paddle = new Paddle();
+	ball = new Ball(paddle.x, paddle.y);
+	bricks = []
+	for (x = 50; x < WIDTH - 50; x += 50) {
+		bricks.push(new Brick(x, 50));
+	}
+}
 
+function loop() {
+	input();
+	logic();
 	draw();
+}
+
+function input() {
+	if (keyL && !keyR) paddle.move(-9);
+	else if(keyR && !keyL) paddle.move(9);
+}
+
+function logic() {
+
 }
 
 function draw() {
 	c.clearRect(0, 0, canvas.width, canvas.height);
-	c.strokeRect(0, 0, 800, 600); // frame
+
+	// frame
+	c.strokeRect(0, 0, canvas.width, canvas.height);
+	c.beginPath();
+	c.moveTo(WIDTH, 0);
+	c.lineTo(WIDTH, HEIGHT);
+	c.stroke();
 
 	paddle.draw(c);
+	ball.draw(c);
+	for (i = 0; i < bricks.length; i++) {
+		bricks[i].draw(c);
+	}
 }
 
 function keydown(e) {
-	if (e.keyCode == LEFT) direction = LEFT;
-	else if (e.keyCode == RIGHT) direction = RIGHT;
+	if (e.keyCode == LEFT) keyL = true;
+	else if (e.keyCode == RIGHT) keyR = true;
 }
 
 function keyup(e) {
-	if (e.keyCode == LEFT || e.keyCode == RIGHT) direction = 0;
+	if (e.keyCode == LEFT) keyL = false;
+	else if (e.keyCode == RIGHT) keyR = false;
 }
