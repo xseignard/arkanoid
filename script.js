@@ -1,5 +1,13 @@
 var LEFT = 37, RIGHT = 39;
+var SPACEBAR = 32;
 var WIDTH = 600; HEIGHT = 600;
+
+var States = {
+	STARTING: 1,
+	PLAYING: 2,
+	OVER: 3
+}
+var gameState = States.STARTING;
 
 var canvas, c;
 var paddle, ball, bricks;
@@ -14,8 +22,6 @@ window.onload = function() {
 	document.addEventListener('keyup', keyup, false);
 
 	init();
-
-	window.setInterval(loop, 30);
 }
 
 function init() {
@@ -27,21 +33,43 @@ function init() {
 			bricks.push(new Brick(x, y));
 		}
 	}
+	window.setInterval(loop, 30);
+}
+
+function start() {
+	var angle = Math.random() * Math.PI / 2 + Math.PI / 4; // 45° - 135°
+	ball.speedX = Math.cos(angle) * Ball.speed;
+	ball.speedY = -Math.sin(angle) * Ball.speed; // we start in top left corner
 }
 
 function loop() {
 	input();
-	logic();
+	if (gameState == States.PLAYING) logic();
 	draw();
 }
 
 function input() {
+	if (gameState == States.OVER) return;
+
 	if (keyL && !keyR) paddle.move(-9);
 	else if(keyR && !keyL) paddle.move(9);
+
+	if (paddle.x < 0) paddle.x = 0;
+	else if	(paddle.x + paddle.w > WIDTH) paddle.x = WIDTH - paddle.w;
 }
 
 function logic() {
+	ball.x += ball.speedX;
+	ball.y += ball.speedY;
+	if (ball.x < 0) ball.speedX = -ball.speedX;
+	if (ball.x > WIDTH) ball.speedX = -ball.speedX;
+	if (ball.y < 0) ball.speedY = -ball.speedY;
 
+	if (ball.y > HEIGHT) {
+		ball.speedX = 0;
+		ball.speedY = 0;
+		gameState = States.OVER;
+	}
 }
 
 function draw() {
@@ -55,13 +83,25 @@ function draw() {
 	c.stroke();
 
 	paddle.draw(c);
-	ball.draw(c);
 	for (i = 0; i < bricks.length; i++) {
 		bricks[i].draw(c);
+	}
+	if (gameState != States.OVER) ball.draw(c);
+	else {
+		text = "Game Over";
+		c.font = '50px monospace';
+		c.fillStyle = 'black';
+		width = c.measureText(text).width;
+		c.fillText(text, WIDTH/2 - width/2, HEIGHT/2);
 	}
 }
 
 function keydown(e) {
+	if (gameState == States.STARTING && e.keyCode == SPACEBAR) {
+		gameState = States.PLAYING;
+		start();
+	}
+
 	if (e.keyCode == LEFT) keyL = true;
 	else if (e.keyCode == RIGHT) keyR = true;
 }
