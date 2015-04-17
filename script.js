@@ -100,8 +100,8 @@ function logic() {
 		// hit?
 		if (edgeX >= brick.x && edgeX <= brick.x + brick.w &&
 				edgeY >= brick.y && edgeY <= brick.y + brick.h) {
-			if (ball.x < brick.x || ball.x < brick.x + brick.w) ball.speedX = -ball.speedX;
-			if (ball.y < brick.y || ball.y < brick.y + brick.h) ball.speedY = -ball.speedY;
+			if (ball.x < brick.x || ball.x < brick.x + brick.w) ball.speedY = -ball.speedY;
+			if (ball.y < brick.y || ball.y < brick.y + brick.h) ball.speedX = -ball.speedX;
 			bricks.splice(i, 1);
 
 			if (bricks.length == 0) {
