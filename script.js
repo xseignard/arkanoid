@@ -33,7 +33,7 @@ function init() {
 			bricks.push(new Brick(x, y));
 		}
 	}
-	window.setInterval(loop, 30);
+	window.setInterval(loop, 25);
 }
 
 function start() {
@@ -61,15 +61,33 @@ function input() {
 function logic() {
 	ball.x += ball.speedX;
 	ball.y += ball.speedY;
-	if (ball.x < 0) ball.speedX = -ball.speedX;
-	if (ball.x > WIDTH) ball.speedX = -ball.speedX;
-	if (ball.y < 0) ball.speedY = -ball.speedY;
 
+	// walls
+	if (ball.x - 2*Ball.radius < 0) ball.speedX = -ball.speedX;
+	if (ball.x + 2*Ball.radius > WIDTH) ball.speedX = -ball.speedX;
+	if (ball.y - 2*Ball.radius < 0) ball.speedY = -ball.speedY;
+
+	// paddle
+	if (ball.y + Ball.radius + ball.speedY > paddle.y &&
+			ball.y + Ball.radius <= paddle.y &&
+			paddle.x < ball.x + Ball.radius &&
+			ball.x + Ball.radius < paddle.x + paddle.w) {
+		// new angle based on impact position
+		var dist = (ball.x - paddle.x) / paddle.w;
+		var angle = Math.PI / 6 + Math.PI * 2/3 * dist;
+		ball.speedX = -Math.cos(angle) * Ball.speed;
+		ball.speedY = -Math.sin(angle) * Ball.speed;
+	}
+
+	// game over
 	if (ball.y > HEIGHT) {
 		ball.speedX = 0;
 		ball.speedY = 0;
 		gameState = States.OVER;
 	}
+
+	// bricks
+
 }
 
 function draw() {
