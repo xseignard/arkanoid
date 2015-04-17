@@ -24,7 +24,7 @@ function Ball(x, y) {
 	this.speedY = 0;
 }
 Ball.radius = 6;
-Ball.speed = 17;
+Ball.speed = 10;
 
 Ball.prototype.draw = function(c) {
 	c.beginPath()

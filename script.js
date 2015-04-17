@@ -29,11 +29,11 @@ function init() {
 	ball = new Ball(paddle.x + Paddle.width/2, paddle.y - Ball.radius);
 	bricks = []
 	for (x = 55; x < WIDTH - 50; x += 50) {
-		for (y = 50; y < 100; y += 24) {
+		for (y = 50; y < 60; y += 24) {
 			bricks.push(new Brick(x, y));
 		}
 	}
-	window.setInterval(loop, 25);
+	window.setInterval(loop, 17);
 }
 
 function start() {
@@ -59,6 +59,7 @@ function input() {
 }
 
 function logic() {
+	// move
 	ball.x += ball.speedX;
 	ball.y += ball.speedY;
 
@@ -70,8 +71,8 @@ function logic() {
 	// paddle
 	if (ball.y + Ball.radius + ball.speedY > paddle.y &&
 			ball.y + Ball.radius <= paddle.y &&
-			paddle.x < ball.x + Ball.radius &&
-			ball.x + Ball.radius < paddle.x + paddle.w) {
+			paddle.x <= ball.x + Ball.radius &&
+			ball.x - Ball.radius <= paddle.x + paddle.w) {
 		// new angle based on impact position
 		var dist = (ball.x - paddle.x) / paddle.w;
 		var angle = Math.PI / 6 + Math.PI * 2/3 * dist;
@@ -87,13 +88,22 @@ function logic() {
 	}
 
 	// bricks
-
+	edgeX = ball.x + Ball.radius * Math.sign(ball.speedX);
+	edgeY = ball.y + Ball.radius * Math.sign(ball.speedY);
+	var verticalHit = false;
+	var horizontalHit = false;
+	for (i = 0; i < bricks.length; i++) {
+		//if (ball.x + Ball.radius >= brick.x && ball.x - Ball.radius <= brick.x + brick.w) {
+			//console.log(i);
+		//}
+	}
 }
 
 function draw() {
 	c.clearRect(0, 0, canvas.width, canvas.height);
 
 	// frame
+	c.strokeStyle = 'black';
 	c.strokeRect(0, 0, canvas.width, canvas.height);
 	c.beginPath();
 	c.moveTo(WIDTH, 0);
